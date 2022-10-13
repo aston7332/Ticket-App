@@ -1,9 +1,7 @@
-node_modules
-
-
-# local env files
+/node_modules
+/Logs
+package-lock.json
+.vscode
+*.log
 .env
-
-# Log files
-npm-debug.log*
 
