@@ -31,13 +31,21 @@
               <div class="col-md-right m-2">
                 <button class="btn bg-white rounded-pill mb-3 border border-primary"><a href="<%= `/` %>" style="text-decoration: none;">Create</a></button>
             </div>
-            
+            <div class="row justify-content-md-right">
+              <div class="col-md-right m-2">
+                <form class="search" method="GET">                  
+                  <input class="bar" type="text" placeholder="" name="task" value="<%= name %>">
+                  <button type="submit" class="btn bg-light rounded-pill  m-2 border border-primary">Search</button>
+                  <button type="reset" class="btn bg-secondary rounded-pill  m-2 border border-primary" onclick='window.location.href="/list"'>Reset</button>
+              </div>
+          </div>
         </div>
        <table class="table table-striped">
         <tr>
           <th>id</th>
            <th>Task</th>
            <th>Discription</th>
+           <th>Image</th>
            <th>Action</th>
         </tr>
      
@@ -46,6 +54,7 @@
               <td><%= i+1 %></td>
               <td><%= tickets[i].task %></td>
               <td><%= tickets[i].dis %></td>
+              <td><img src="<%= tickets[i].img %>" width="50" /></td>
               <td>
                <button class="btn bg-light rounded-pill  m-2 border border-primary"><a href="<%= `/ticketEdit/${tickets[i].id}` %>" style="text-decoration: none; color: orange;">Edit</a></button>
                <button class="btn btn-danger rounded-pill border border-success"><a href="/remove/<%= tickets[i].id %>" style="text-decoration: none; color: white;">Delete</a></button>

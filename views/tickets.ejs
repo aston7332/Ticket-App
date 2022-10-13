@@ -17,12 +17,29 @@
       integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
       crossorigin="anonymous"
     ></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script>
+      $(document).ready(() => {
+        $("#image").change(function () {
+          const file = this.files[0];
+          if (file) {
+            let reader = new FileReader();
+            reader.onload = function (event) {
+              $("#imgShow").attr("src", event.target.result);
+            };
+            reader.readAsDataURL(file);
+          }
+        });
+      });
+    </script>
   </head>
   <body>
-    <div class="container col-4 col-offset-2 p-5 shadow-lg p-3 mb-5 bg-body rounded mt-5">
+    <div
+      class="container col-4 col-offset-2 p-5 shadow-lg p-3 mb-5 bg-body rounded mt-5"
+    >
       <div class="container" style="background-color: #eee">
         <div class="col-12 justify-content-center pb-3">
-          <form method="POST">
+          <form method="POST" enctype="multipart/form-data">
             <div class="container">
               <div class="row justify-content-md-center">
                 <div class="col-md-auto mt-2">
@@ -41,11 +58,37 @@
               />
             </div>
             <div class="mb-3">
-              <label for="dis" class="form-label text-wrap">Discription :</label>
-              <textarea  class="form-control" id="dis" name="dis" ></textarea>
+              <label for="dis" class="form-label text-wrap"
+                >Discription :</label
+              >
+              <textarea class="form-control" id="dis" name="dis"></textarea>
             </div>
             <div class="mb-3">
-              <button type="submit" class="btn bg-white rounded-pill mb-3 border border-primary">
+              <label for="task" class="form-label">Task :</label>
+              <input
+                type="file"
+                class="form-control"
+                name="image"
+                id="image"
+                required
+              />
+              <div
+                class="mb-3 mt"
+                style="height: 200px; width: 200px; border: 2px solid black"
+              >
+                <img
+                  src="#"
+                  id="imgShow"
+                  class="imgShow"
+                  style="height: 200px; width: 200px"
+                />
+              </div>
+            </div>
+            <div class="mb-3">
+              <button
+                type="submit"
+                class="btn bg-white rounded-pill mb-3 border border-primary"
+              >
                 Submit
               </button>
             </div>

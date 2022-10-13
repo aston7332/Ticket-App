@@ -17,6 +17,21 @@
       integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
       crossorigin="anonymous"
     ></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script>
+      $(document).ready(() => {
+        $("#image").change(function () {
+          const file = this.files[0];
+          if (file) {
+            let reader = new FileReader();
+            reader.onload = function (event) {
+              $("#imgShow").attr("src", event.target.result);
+            };
+            reader.readAsDataURL(file);
+          }
+        });
+      });
+    </script>
   </head>
   <body>
     <div
@@ -24,7 +39,7 @@
     >
       <div class="container" style="background-color: #eee">
         <div class="col-12 justify-content-center pb-3">
-          <form method="POST" action="<%= `/ticketEdit/${tickets.id} ` %>">
+          <form method="POST" enctype="multipart/form-data" action="<%= `/ticketEdit/${tickets.id}?_method=PUT` %>" >
             <div class="container">
                 <div class="row justify-content-md-center">
                   <div class="col-md-auto mt-2">
@@ -50,6 +65,21 @@
                 id="dis"
                 name="dis"
               ><%= tickets.dis %></textarea>
+            </div>
+            <div class="mb-3">
+              <label for="task" class="form-label">Task :</label>
+              <input
+                type="file"
+                class="form-control"
+                name="image"
+                id="image"
+                value="<%= tickets.img %>"
+              />
+              <input type="hidden" name="old_image" value="<%= tickets.img  %>">
+              
+                <img src="/<%= tickets.img %>" id="imgShow" class="imgShow" style="height: 200px; width: 200px" />
+              
+            </div>
             </div>
             <button type="submit" class="btn bg-white rounded-pill mb-3 border border-primary">
               Submit
