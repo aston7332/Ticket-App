@@ -18,6 +18,8 @@
       crossorigin="anonymous"
     ></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="https://cdn.ckeditor.com/ckeditor5/11.0.1/classic/ckeditor.js"></script>
+
     <script>
       $(document).ready(() => {
         $("#image").change(function () {
@@ -26,9 +28,13 @@
             let reader = new FileReader();
             reader.onload = function (event) {
               $("#imgShow").attr("src", event.target.result);
+              $("abc").css("display", "block");
             };
             reader.readAsDataURL(file);
           }
+        });
+        $("#image").on("change", function () {
+          $("#show").css("display", "block");
         });
       });
     </script>
@@ -62,19 +68,32 @@
                 >Discription :</label
               >
               <textarea class="form-control" id="dis" name="dis"></textarea>
+              <script>
+                ClassicEditor
+                    .create( document.querySelector( '#dis' ) )
+                    .catch( error => {
+                        console.error( error );
+                    } );
+            </script>
             </div>
             <div class="mb-3">
-              <label for="task" class="form-label">Task :</label>
+              <label for="task" class="form-label">Image :</label>
               <input
                 type="file"
                 class="form-control"
                 name="image"
                 id="image"
                 required
-              />
+              /><br>
               <div
-                class="mb-3 mt"
-                style="height: 200px; width: 200px; border: 2px solid black"
+                id="show"
+                class="mb-3 mt abc"
+                style="
+                  height: 200px;
+                  width: 200px;
+                  border: 2px solid black;
+                  display: none;
+                "
               >
                 <img
                   src="#"

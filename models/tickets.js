@@ -16,6 +16,14 @@ const ticketsSchema = new mongoose.Schema({
     date: {
         type: Date,
         default: Date.now
-    }
+    },
+    created_at: {
+		type : Date,
+		default: Date.now,
+	},
+	updated_at: {
+		type : Date,
+		default: Date.now,
+	}
 })
 module.exports = mongoose.model('ticket', ticketsSchema);

@@ -2,6 +2,5 @@
 /Logs
 package-lock.json
 .vscode
-*.log
 .env
 
