@@ -46,6 +46,7 @@
       <div class="container" style="background-color: #eee">
         <div class="col-12 justify-content-center pb-3">
           <form method="POST" enctype="multipart/form-data">
+            <input type="hidden" name="_csrf" value="<%= `${csrfToken}` %>">
             <div class="container">
               <div class="row justify-content-md-center">
                 <div class="col-md-auto mt-2">

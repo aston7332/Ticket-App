@@ -116,7 +116,7 @@
                     <td><img src="<%= tickets[i].img %>" width="50" /></td>
                     <td>
                      <button class="btn bg-light rounded-pill  m-2 border border-primary"><a href="<%= `/ticketEdit/${tickets[i].id}` %>" style="text-decoration: none; color: orange;">Edit</a></button>
-                     <button class="btn btn-danger rounded-pill border border-success"><a href="/remove/<%= tickets[i].id %>" style="text-decoration: none; color: white;">Delete</a></button>
+                     <button class="btn btn-danger rounded-pill border border-success"><a href="/remove/<%= tickets[i].id %>" onclick="return confirm('Are you sure you want to Delete this?')" style="text-decoration: none; color: white;">Delete</a></button>
                     </td>
                   </tr>    
                  <% } %>
