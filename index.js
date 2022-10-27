@@ -9,7 +9,8 @@ const multer = require('multer');
 const fs = require('fs');
 var cookieParser = require('cookie-parser')
 var csrf = require('csurf')
-var bodyParser = require('body-parser')
+var bodyParser = require('body-parser');
+const { DefaultDeserializer } = require("v8");
 
 // setup route middlewares
 var csrfProtection = csrf({ cookie: true })
@@ -63,12 +64,12 @@ mongoose.connect('mongodb://localhost:27017/tickets', { useNewUrlParser: true },
     console.log("Connected to db!");
 
     app.get('/', csrfProtection, (req, res) => {
-        
         res.render('tickets.ejs' , { csrfToken: req.csrfToken() });
     });
 
     // Creating a POST request
     app.post('/', upload, csrfProtection, async (req, res) => {
+        // console.log(req.body,"Hello")
         // console.log(req.file);
         const ticket = require("./models/tickets");
         const ticket1 = new ticket({
@@ -76,6 +77,7 @@ mongoose.connect('mongodb://localhost:27017/tickets', { useNewUrlParser: true },
             dis: req.body.dis,
             img: req.file.filename,            
         });
+        console.log(ticket1);
         try {
             await ticket1.save();
             res.redirect("/list");
@@ -133,24 +135,24 @@ mongoose.connect('mongodb://localhost:27017/tickets', { useNewUrlParser: true },
     })
 
     // Creating a DELETE request
-    app.route("/remove/:id").get((req, res) => {
-        const id = req.params.id;
-        ticket.findByIdAndRemove(id, (err, result) => {
-            if (result.img != '') {
-                try {
-                    fs.unlinkSync('./images/' + result.img);
-                } catch (err) {
-                    console.log(err);
-                }
-            } else {
-                res.redirect("/list");
-            }
-            if (err) {
-                res.send(500, err);
-            } else {
-                res.redirect("/list");
-            }
-        });
-    });
+    // app.route("/remove/:id").get((req, res) => {
+    //     const id = req.params.id;
+    //     ticket.findByIdAndRemove(id, (err, result) => {
+    //         if (result.img != '') {
+    //             try {
+    //                 fs.unlinkSync('./images/' + result.img);
+    //             } catch (err) {
+    //                 console.log(err);
+    //             }
+    //         } else {
+    //             res.redirect("/list");
+    //         }
+    //         if (err) {
+    //             res.send(500, err);
+    //         } else {
+    //             res.redirect("/list");
+    //         }
+    //     });
+    // });
     app.listen(3000, () => console.log("Server Up and running"));
 });
