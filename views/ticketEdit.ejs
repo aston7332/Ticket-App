@@ -48,6 +48,7 @@
     <div
       class="container col-4 col-offset-2 p-5 shadow-lg p-3 mb-5 bg-body rounded mt-5"
     >
+    <% include .notifications %>
       <div class="container" style="background-color: #eee">
         <div class="col-12 justify-content-center pb-3">
           <form method="POST" enctype="multipart/form-data" action="<%= `/ticketEdit/${tickets.id}?_method=PUT` %>" >

@@ -2,7 +2,9 @@
 <html>
   <head>
     
-    <script src="https://code.jquery.com/jquery-3.5.1.js" type="text/javascript"></script>
+    <!-- <script src="https://code.jquery.com/jquery-3.5.1.js" type="text/javascript"></script> -->
+    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script> -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 
     <script src="https://cdn.datatables.net/1.11.1/js/jquery.dataTables.min.js"></script>
 
@@ -11,6 +13,11 @@
  <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.css" rel="stylesheet">
 
  <link href="https://cdn.datatables.net/1.11.1/css/dataTables.bootstrap4.min.css" rel="stylesheet">
+
+ <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.2/css/toastr.min.css">
+<!-- <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script> -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.2/js/toastr.min.js"></script>
+
     <script>
        $(document).ready(() => {
         $('#datatable').dataTable();
@@ -19,7 +26,9 @@
 
     
   </head>
-  <body>    
+  <body>   
+    <%- req.toastr.render() %>
+    
     <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #a7d1f0;">
       <div class="container-fluid">
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
@@ -30,7 +39,7 @@
         </div>
       </div>
     </nav>
-    <div class="card p-5 shadow-lg p-3 mb-5 bg-body rounded mt-2">
+    <div class="card p-5 shadow-lg p-3 mb-5 bg-body rounded mt-0">
       <div class="container pb-5" style="background-color: #eee;">
         <div class="row justify-content-md-center">
             <div class="col-md-auto mt-2">
@@ -42,15 +51,17 @@
           <div class="col-md-12 m-2">
             <button class="btn bg-white rounded-pill mb-3 border border-primary"><a href="<%= `/` %>" style="text-decoration: none;">Create</a></button>
         </div>
+        
         <div class="row justify-content-md-right">
           <div class="col-md-12 m-2">
-            <form class="search" method="GET">                  
+            <form class="search" method="GET">    
               <input class="bar" type="text" placeholder="" name="task" value="<%= name %>">
               <button type="submit" class="btn bg-light rounded-pill  m-2 border border-primary">Search</button>
               <button type="reset" class="btn bg-secondary rounded-pill  m-2 border border-primary" onclick='window.location.href="/list"'>Reset</button>
           </div>
       </div>
     </div>
+   
       
     <div class="card-body">
       
@@ -78,7 +89,9 @@
                     <td><img src="<%= tickets[i].img %>" width="50" /></td>
                     <td>
                      <button class="btn bg-light rounded-pill  m-2 border border-primary"><a href="<%= `/ticketEdit/${tickets[i].id}` %>" style="text-decoration: none; color: orange;">Edit</a></button>
-                     <button class="btn btn-danger rounded-pill border border-success"><a href="/remove/<%= tickets[i].id %>" onclick="return confirm('Are you sure you want to Delete this?')" style="text-decoration: none; color: white;">Delete</a></button>
+                     <!-- <button class="btn btn-danger rounded-pill border border-success"><a href="/remove/<%= tickets[i].id %>" onclick="return confirm('Are you sure you want to Delete this?')" style="text-decoration: none; color: white;">Delete</a></button> -->
+                     <button type="button" href="#" class="removeCategory btn bg-light rounded-pill  m-2 border border-primary" id="btnSun" name="<%= tickets[i].id %>" data-id="<%= tickets[i].id %>" onclick="return confirm('Are you sure you want to Delete this?')">DELETE</button>
+                     <!-- <button id="deleteBtn" class="btn btn-danger rounded-pill border border-success"><a href="#" class="removeCategory button tiny alert" data-id="{tickets[i].id}"  style="text-decoration: none; color: white;">Delete</a></button> -->
                     </td>
                   </tr>    
                  <% } %>
@@ -87,5 +100,52 @@
       </table>  
       
     </div>
+    <!-- <script>
+      $(document).ready(function(){
+    $('#deleteBtn').click(function(e){
+      console.log('hello world')
+        // $target =  $(e.target);
+        // var id = $target.attr('data-id');
+        // console.log(id);
+        // $.ajax({
+        //     type: 'DELETE',
+        //     url: '/remove/:'+id,
+        //     success: function(response){
+        //         alert('Delete');
+        //         window.location = '/list';
+        //     },
+        //     error: function(err){
+        //         console.log(err);
+        //     }
+
+        // });
+    });
+
+});
+    </script> -->
+    <script>
+     $(document).ready(function() {
+  $('.removeCategory').click(myFunction);
+});
+
+function myFunction(e) {
+  var This = this;
+  $target =  $(e.target);
+        var id = $target.attr('data-id');
+        // console.log(id,"fydguw");
+        $.ajax({
+            type: 'GET',
+            url: '/remove/'+id,
+            success: function(response){
+              $(This).closest("tr").remove();
+                // window.location = '/list';
+                // window.location.href="/list";
+            },
+            error: function(err){
+                console.log(err);
+            }
+          });
+}
+    </script>
   </body>
 </html>

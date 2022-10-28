@@ -11,6 +11,9 @@ var cookieParser = require('cookie-parser')
 var csrf = require('csurf')
 var bodyParser = require('body-parser');
 const { DefaultDeserializer } = require("v8");
+const session = require('express-session');
+const flash = require('connect-flash');
+var toastr = require('express-toastr');
 
 // setup route middlewares
 var csrfProtection = csrf({ cookie: true })
@@ -60,6 +63,17 @@ app.use(express.static("./images"));
 app.use(cookieParser())
 
 
+// Set Cookie Parser, sessions and flash
+app.use(session({
+  secret : 'something',
+  cookie: { maxAge: 60000 },
+  resave: true,
+  saveUninitialized: true
+}));
+app.use(flash());
+
+app.use(toastr());
+
 mongoose.connect('mongodb://localhost:27017/tickets', { useNewUrlParser: true }, () => {
     console.log("Connected to db!");
 
@@ -75,13 +89,15 @@ mongoose.connect('mongodb://localhost:27017/tickets', { useNewUrlParser: true },
         const ticket1 = new ticket({
             task: req.body.task,
             dis: req.body.dis,
-            img: req.file.filename,            
+            img: req.file.filename,          
         });
-        console.log(ticket1);
         try {
             await ticket1.save();
+            // req.flash('user', "Ticket create successfully");
+            req.toastr.success('Successfully Created');
             res.redirect("/list");
         } catch (err) {
+            req.toastr.error('Invalid credentials.');
             res.status(500).send(err);
         }
     });
@@ -94,8 +110,10 @@ mongoose.connect('mongodb://localhost:27017/tickets', { useNewUrlParser: true },
             name = req.query.task;
         }
         try {
+            // const userName = req.flash('user');
+            // const userName = req.toastr;
             let result = await ticket.find({ "task": { $regex: ".*" + name + ".*" } }).then((tickets) => {
-                res.render("list.ejs", { tickets: tickets, name: name })
+                res.render("list.ejs", { req: req ,tickets: tickets, name: name })
             })
         } catch (err) {
             res.status(500).send(err);
@@ -127,32 +145,40 @@ mongoose.connect('mongodb://localhost:27017/tickets', { useNewUrlParser: true },
         }
         try {
             let result = await ticket.findByIdAndUpdate(myObjectId, { task: req.body.task, dis: req.body.dis, img: new_image }).then(tickets => {
+                req.toastr.success('Successfully Edited');
                 res.redirect(`/list`)
             })
         } catch (err) {
+            req.toastr.error('Invalid credentials.');
             console.log(err.message)
         }
     })
 
     // Creating a DELETE request
-    // app.route("/remove/:id").get((req, res) => {
-    //     const id = req.params.id;
-    //     ticket.findByIdAndRemove(id, (err, result) => {
-    //         if (result.img != '') {
-    //             try {
-    //                 fs.unlinkSync('./images/' + result.img);
-    //             } catch (err) {
-    //                 console.log(err);
-    //             }
-    //         } else {
-    //             res.redirect("/list");
-    //         }
-    //         if (err) {
-    //             res.send(500, err);
-    //         } else {
-    //             res.redirect("/list");
-    //         }
-    //     });
-    // });
+    app.route("/remove/:id").get((req, res) => {
+
+        const id = req.params.id;
+        // console.log(id)
+        ticket.findByIdAndRemove(id, (err, result) => {
+            if (result.img != '') {
+                try {
+                    fs.unlinkSync('./images/' + result.img);
+                } catch (err) {
+                    console.log(err);
+                }
+            } else {
+                req.toastr.success('Successfully Deleted');
+                res.redirect("/list");
+            }
+            if (err) {
+                res.send(500, err);
+            } else {
+                req.toastr.success('Successfully Deleted');
+                res.redirect("/list");
+            }
+        });
+    });
+
+
     app.listen(3000, () => console.log("Server Up and running"));
 });
